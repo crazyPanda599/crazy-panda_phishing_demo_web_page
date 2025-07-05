@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crazy Panda - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Use a monospace font for the hacker feel */
+        body {
+            font-family: 'Roboto Mono', monospace;
+            overflow: hidden; /* Hide scrollbars */
+        }
+        /* Style for the canvas to be in the background */
+        #matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        /* Custom styles for the form container for a frosted glass effect */
+        .form-container {
+            background-color: rgba(17, 24, 39, 0.8); /* Semi-transparent dark background */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* For Safari */
+            border: 1px solid rgba(55, 65, 81, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-blue-400">
+
+    <!-- Canvas for the animated background -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Main container for centering the login form -->
+    <div class="min-h-screen flex items-center justify-center p-4">
+        
+        <!-- Login form container -->
+        <div class="form-container max-w-sm w-full mx-auto p-8 rounded-xl shadow-lg">
+            
+            <!-- Logo -->
+            <div class="flex justify-center mb-6">
+                <img src="D:\youtube\Setoolkit\Web Page\logo.png" alt="Crazy Panda Logo" class="w-24 h-24">
+            </div>
+
+            <!-- Title and Subtitle -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-white">CRAZY PANDA</h1>
+                <p class="text-pink-400 mt-2 text-xs uppercase tracking-wider">Learn Ethical Hacking And Cyber Security Here!</p>
+            </div>
+
+            <!-- Form -->
+            <form>
+                <div class="mb-4">
+                    <label for="username" class="sr-only">Username</label>
+                    <input type="text" id="username" name="username" placeholder="username" class="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300">
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="sr-only">Password</label>
+                    <input type="password" id="password" name="password" placeholder="password" class="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300">
+                </div>
+                <button type="submit" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-lg transition duration-300 shadow-md hover:shadow-lg shadow-pink-500/30">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get the canvas element and its 2D rendering context
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas dimensions to fill the entire screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // The characters that will be raining down (binary)
+        const characters = '01';
+        const charArray = characters.split('');
+        const colors = ['#00BFFF', '#FF1493', '#48D1CC']; // Blue, Pink, Teal
+
+        const fontSize = 16;
+        // Calculate the number of columns based on canvas width and font size
+        const columns = Math.floor(canvas.width / fontSize);
+
+        // Create an array to store the y-position of each character drop in each column
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+
+        // The main drawing function that creates the animation
+        function draw() {
+            // Fill the canvas with a semi-transparent black color on each frame
+            // This creates the fading trail effect for the characters
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Set the font for the raining characters
+            ctx.font = fontSize + 'px ' + getComputedStyle(document.body).fontFamily;
+
+            // Loop through each column
+            for (let i = 0; i < drops.length; i++) {
+                // Get a random character from the charArray
+                const text = charArray[Math.floor(Math.random() * charArray.length)];
+                
+                // Set a random color from the colors array for each character
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+
+                // Draw the character at the current position
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                // Reset the drop to the top of the screen randomly after it has gone off-screen
+                // This makes the rain effect look more natural and less uniform
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                // Move the drop down by one position for the next frame
+                drops[i]++;
+            }
+        }
+
+        // Start the animation loop, running the draw function every 33 milliseconds
+        setInterval(draw, 33);
+
+        // Adjust canvas dimensions on window resize to maintain the full-screen effect
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Recalculate columns and reset drops array if needed
+        });
+    </script>
+</body>
+</html>
